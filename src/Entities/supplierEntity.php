@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="supplierEntity)
+ * @ORM\Table(name="supplierEntity")
  */
 class supplierEntity
 {
@@ -28,7 +28,7 @@ class supplierEntity
     private $strasse;
 
     /**
-     * @ORM\Column(type="string", name"plz", length=5)
+     * @ORM\Column(type="string", name="plz", length=5)
      */
     private $plz;
     /**
@@ -48,7 +48,7 @@ class supplierEntity
      */
     private $fax;
     /**
-     * @vORM\Column(type="string", name="email", length=20)
+     * @ORM\Column(type="string", name="email", length=20)
      */
     private $mail;
 
