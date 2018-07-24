@@ -48,7 +48,7 @@ class supplierEntity
      */
     private $fax;
     /**
-     * @ORM\Column(type="string", name="email", length=20)
+     * @ORM\Column(type="string", name="email", length=45)
      */
     private $mail;
 
