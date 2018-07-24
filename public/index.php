@@ -14,4 +14,4 @@ require '../vendor/autoload.php';
 //$app->run();
 
 // Change to route-file
-require '../src/routes/example.php';
+require '../src/routes/routes.php';
