@@ -4,10 +4,6 @@ namespace Entities;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * This is just an example Entity class for the Doctrine Databaseconnections
- */
-
-/**
  * @ORM\Entity
  * @ORM\Table(name="roomEntity")
  */

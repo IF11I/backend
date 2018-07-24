@@ -279,19 +279,30 @@ $app->get('/components', function(Request $request, Response $response) {
     $components = $repository->findAll();
     $result = [];
 
+    $attributeRepository = $entityManager->getRepository('Entities\componentHasAttributesEntity');
+    $attributNamenRepository = $entityManager->getRepository('Entities\componentAttributesEntity');
+
     foreach($components as $component) {
+        $attributesObj = $attributeRepository->findBy(array('komponentenId' => utf8_encode($component->getId())));
+        $attributes = [];
+        foreach($attributesObj as $attributeObj) {
+            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
+            $attributes[] = [
+                'id' => utf8_encode($attributeObj->getAttributId()),
+                'label' => utf8_encode($attributesNameObj->getBezeichnung()),
+                'value' => utf8_encode($attributeObj->getWert()),
+            ];
+        }
         $result[] = [
             'id' => utf8_encode($component->getId()),
             'roomId' => utf8_encode($component->getRaumId()),
             'supplierId' => utf8_encode($component->getLieferantenId()),
-//            'datePurchased' => utf8_encode($component->getEinkaufsdatum()),
             'datePurchased' => $component->getEinkaufsdatum(),
-//            'dateWarrantyEnd' => utf8_encode($component->getGewaehrleistungsende()),
             'dateWarrantyEnd' => $component->getGewaehrleistungsende(),
             'notes' => utf8_encode($component->getNotiz()),
             'manufacturer' => utf8_encode($component->getHersteller()),
             'componentTypeId' => utf8_encode($component->getKomponentenartId()),
-            'attributes' => [],
+            'attributes' => $attributes,
         ];
     }
     return $response->withJson($result);
@@ -309,19 +320,31 @@ $app->get('/components/{id}', function(Request $request, Response $response, arr
     $repository = $entityManager->getRepository('Entities\componentEntity');
     $id = $args['id'];
     $component = $repository->find($id);
+
+    $attributeRepository = $entityManager->getRepository('Entities\componentHasAttributesEntity');
+    $attributNamenRepository = $entityManager->getRepository('Entities\componentAttributesEntity');
+
     if($component != null) {
+        $attributesObj = $attributeRepository->findBy(array('komponentenId' => utf8_encode($component->getId())));
+        $attributes = [];
+        foreach($attributesObj as $attributeObj) {
+            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
+            $attributes[] = [
+                'id' => utf8_encode($attributeObj->getAttributId()),
+                'label' => utf8_encode($attributesNameObj->getBezeichnung()),
+                'value' => utf8_encode($attributeObj->getWert()),
+            ];
+        }
         $result = [
             'id' => utf8_encode($component->getId()),
             'roomId' => utf8_encode($component->getRaumId()),
             'supplierId' => utf8_encode($component->getLieferantenId()),
-//            'datePurchased' => utf8_encode($component->getEinkaufsdatum()),
             'datePurchased' => $component->getEinkaufsdatum(),
-//            'dateWarrantyEnd' => utf8_encode($component->getGewaehrleistungsende()),
             'dateWarrantyEnd' => $component->getGewaehrleistungsende(),
             'notes' => utf8_encode($component->getNotiz()),
             'manufacturer' => utf8_encode($component->getHersteller()),
             'componentTypeId' => utf8_encode($component->getKomponentenartId()),
-            'attributes' => [],
+            'attributes' => $attributes,
         ];
         return $response->withJson($result);
     }else {
@@ -349,6 +372,18 @@ $app->post('/components', function(Request $request, Response $response) {
     $componentEntity->setKomponentenartId(utf8_decode($component['componentTypeId']));
     $componentEntity->setRaumId(utf8_decode($component['roomId']));
     /* 'attributes' => [], */
+    $attributes = [];
+    $attributesObj = json_decode($component['attributes']);
+    foreach($attributesObj as $attributeObj) {
+//        $attributes[] = [
+//            ''
+//        ];
+        /*
+        komponentId             attributId
+        attributId              label (attributName)
+        wert                    wert
+         */
+    }
 
     $entityManager->persist($componentEntity);
     $entityManager->flush();
