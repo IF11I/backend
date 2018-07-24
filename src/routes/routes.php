@@ -1,8 +1,10 @@
 <?php
 namespace routes;
 
+use \DateTime;
 use Entities\supplierEntity;
 use Entities\roomEntity;
+use Entities\componentEntity;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -90,11 +92,11 @@ $app->put('/rooms/{id}', function(Request $request, Response $response, array $a
     $room = $repository->find($id);
     $roomData = $request->getParsedBody();
     if($room != null) {
-        if(isset($roomData['number']) && !trim($roomData['number']) == "")
+        if(isset($roomData['number']))
             $room->setNr(utf8_decode($roomData['number']));
-        if(isset($roomData['name']) && !trim($roomData['name']) == "")
+        if(isset($roomData['name']))
             $room->setBezeichnung(utf8_decode($roomData['name']));
-        if(isset($roomData['notes']) && !trim($roomData['notes']) == "")
+        if(isset($roomData['notes']))
             $room->setNotiz(utf8_decode($roomData['notes']));
 
         $entityManager->persist($room);
@@ -221,21 +223,21 @@ $app->put('/suppliers/{id}', function(Request $request, Response $response, arra
     $supplierData = $request->getParsedBody();
     if($supplier != null) {
 
-        if(isset($supplierData['name']) && !trim($supplierData['name']) == "")
+        if(isset($supplierData['name']))
             $supplier->setName(utf8_decode($supplierData['name']));
-        if(isset($supplierData['street']) && !trim($supplierData['street']) == "")
+        if(isset($supplierData['street']))
             $supplier->setStrasse(utf8_decode($supplierData['street']));
-        if(isset($supplierData['postalCode']) && !trim($supplierData['postalCode']) == "")
+        if(isset($supplierData['postalCode']))
             $supplier->setPlz(utf8_decode($supplierData['postalCode']));
-        if(isset($supplierData['city']) && !trim($supplierData['city']) == "")
+        if(isset($supplierData['city']))
             $supplier->setOrt(utf8_decode($supplierData['city']));
-        if(isset($supplierData['telephone']) && !trim($supplierData['telephone']) == "")
+        if(isset($supplierData['telephone']))
             $supplier->setTelefon(utf8_decode($supplierData['telephone']));
-        if(isset($supplierData['mobile']) && !trim($supplierData['mobile']) == "")
+        if(isset($supplierData['mobile']))
             $supplier->setMobil(utf8_decode($supplierData['mobile']));
-        if(isset($supplierData['fax']) && !trim($supplierData['fax']) == "")
+        if(isset($supplierData['fax']))
             $supplier->setFax(utf8_decode($supplierData['fax']));
-        if(isset($supplierData['email']) && !trim($supplierData['email']) == "")
+        if(isset($supplierData['email']))
             $supplier->setMail(utf8_decode($supplierData['email']));
 
         $entityManager->persist($supplier);
@@ -258,6 +260,154 @@ $app->delete('/suppliers/{id}', function(Request $request, Response $response, a
     $supplier = $repository->find($id);
     if($supplier != null) {
         $entityManager->remove($supplier);
+        $entityManager->flush();
+        return $response;
+    } else {
+        return $response->withStatus(204, "No Data Found");
+    }
+});
+
+/**
+ * getting all the components
+ * @return HTTP response
+ */
+$app->get('/components', function(Request $request, Response $response) {
+
+    require '../bootstrap.php';
+
+    $repository = $entityManager->getRepository('Entities\componentEntity');
+    $components = $repository->findAll();
+    $result = [];
+
+    foreach($components as $component) {
+        $result[] = [
+            'id' => utf8_encode($component->getId()),
+            'roomId' => utf8_encode($component->getRaumId()),
+            'supplierId' => utf8_encode($component->getLieferantenId()),
+//            'datePurchased' => utf8_encode($component->getEinkaufsdatum()),
+            'datePurchased' => $component->getEinkaufsdatum(),
+//            'dateWarrantyEnd' => utf8_encode($component->getGewaehrleistungsende()),
+            'dateWarrantyEnd' => $component->getGewaehrleistungsende(),
+            'notes' => utf8_encode($component->getNotiz()),
+            'manufacturer' => utf8_encode($component->getHersteller()),
+            'componentTypeId' => utf8_encode($component->getKomponentenartId()),
+            'attributes' => [],
+        ];
+    }
+    return $response->withJson($result);
+});
+
+/**
+ * getting a single component by Id
+ * @param int id
+ * @return HTTP response
+ */
+$app->get('/components/{id}', function(Request $request, Response $response, array $args) {
+
+    require '../bootstrap.php';
+
+    $repository = $entityManager->getRepository('Entities\componentEntity');
+    $id = $args['id'];
+    $component = $repository->find($id);
+    if($component != null) {
+        $result = [
+            'id' => utf8_encode($component->getId()),
+            'roomId' => utf8_encode($component->getRaumId()),
+            'supplierId' => utf8_encode($component->getLieferantenId()),
+//            'datePurchased' => utf8_encode($component->getEinkaufsdatum()),
+            'datePurchased' => $component->getEinkaufsdatum(),
+//            'dateWarrantyEnd' => utf8_encode($component->getGewaehrleistungsende()),
+            'dateWarrantyEnd' => $component->getGewaehrleistungsende(),
+            'notes' => utf8_encode($component->getNotiz()),
+            'manufacturer' => utf8_encode($component->getHersteller()),
+            'componentTypeId' => utf8_encode($component->getKomponentenartId()),
+            'attributes' => [],
+        ];
+        return $response->withJson($result);
+    }else {
+        return $response->withStatus(204, "No Data Found");
+    }
+});
+
+/**
+ * adding a component
+ * @return HTTP response
+ */
+$app->post('/components', function(Request $request, Response $response) {
+
+    require '../bootstrap.php';
+
+    $component = $request->getParsedBody();
+    $componentEntity = new componentEntity();
+
+    $componentEntity->setRaumId(utf8_decode($component['roomId']));
+    $componentEntity->setLieferantenId(utf8_decode($component['supplierId']));
+    $componentEntity->setEinkaufsdatum(new DateTime(utf8_decode($component['datePurchased'])));
+    $componentEntity->setGewaehrleistungsende(new DateTime(utf8_decode($component['dateWarrantyEnd'])));
+    $componentEntity->setNotiz(utf8_decode($component['notes']));
+    $componentEntity->setHersteller(utf8_decode($component['manufacturer']));
+    $componentEntity->setKomponentenartId(utf8_decode($component['componentTypeId']));
+    $componentEntity->setRaumId(utf8_decode($component['roomId']));
+    /* 'attributes' => [], */
+
+    $entityManager->persist($componentEntity);
+    $entityManager->flush();
+
+    return $response->withStatus(201, "Data created successfully");
+});
+
+/**
+ * editing a component
+ * @return HTTP response
+ */
+$app->put('/components/{id}', function(Request $request, Response $response, array $args) {
+
+    require '../bootstrap.php';
+
+    $repository = $entityManager->getRepository('Entities\componentEntity');
+    $id = $args['id'];
+    $component = $repository->find($id);
+    $componentData = $request->getParsedBody();
+    if($component != null) {
+
+        if(isset($componentData['roomId']))
+            $component->setRaumId(utf8_decode($componentData['roomId']));
+        if(isset($componentData['supplierId']))
+            $component->setLieferantenId(utf8_decode($componentData['supplierId']));
+        if(isset($componentData['datePurchased']))
+            $component->setEinkaufsdatum(new DateTime(utf8_decode($componentData['datePurchased'])));
+        if(isset($componentData['dateWarrantyEnd']))
+            $component->setGewaehrleistungsende(new DateTime(utf8_decode($componentData['dateWarrantyEnd'])));
+        if(isset($componentData['notes']))
+            $component->setNotiz(utf8_decode($componentData['notes']));
+        if(isset($componentData['manufacturer']))
+            $component->setHErsteller(utf8_decode($componentData['manufacturer']));
+        if(isset($componentData['componentTypeId']))
+            $component->setKomponentenartId(utf8_decode($componentData['componentTypeId']));
+        if(isset($componentData['attributes']))
+            $tmp = [];
+//            $component->setName(utf8_decode($componentData['roomId']));
+
+        $entityManager->persist($component);
+        $entityManager->flush();
+    }else {
+        return $response->withStatus(204, "No Data Found");
+    }
+});
+
+/**
+ * delets a component
+ * @return HTTP response
+ */
+$app->delete('/components/{id}', function(Request $request, Response $response, array $args) {
+
+    require '../bootstrap.php';
+
+    $repository = $entityManager->getRepository('Entities\componentEntity');
+    $id = $args['id'];
+    $component = $repository->find($id);
+    if($component != null) {
+        $entityManager->remove($component);
         $entityManager->flush();
         return $response;
     } else {
