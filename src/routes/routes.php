@@ -2,6 +2,8 @@
 namespace routes;
 
 use \DateTime;
+use Entities\componentAttributesEntity;
+use Entities\componentHasAttributesEntity;
 use Entities\supplierEntity;
 use Entities\roomEntity;
 use Entities\componentEntity;
@@ -363,6 +365,8 @@ $app->post('/components', function(Request $request, Response $response) {
     $component = $request->getParsedBody();
     $componentEntity = new componentEntity();
 
+    $attributeRepository = $entityManager->getRepository('Entities\componentAttributesEntity');
+
     $componentEntity->setRaumId(utf8_decode($component['roomId']));
     $componentEntity->setLieferantenId(utf8_decode($component['supplierId']));
     $componentEntity->setEinkaufsdatum(new DateTime(utf8_decode($component['datePurchased'])));
@@ -371,22 +375,39 @@ $app->post('/components', function(Request $request, Response $response) {
     $componentEntity->setHersteller(utf8_decode($component['manufacturer']));
     $componentEntity->setKomponentenartId(utf8_decode($component['componentTypeId']));
     $componentEntity->setRaumId(utf8_decode($component['roomId']));
-    /* 'attributes' => [], */
-    $attributes = [];
-    $attributesObj = json_decode($component['attributes']);
-    foreach($attributesObj as $attributeObj) {
-//        $attributes[] = [
-//            ''
-//        ];
-        /*
-        komponentId             attributId
-        attributId              label (attributName)
-        wert                    wert
-         */
-    }
 
     $entityManager->persist($componentEntity);
     $entityManager->flush();
+
+
+
+    $attributesObj = json_decode($component['attributes']);
+    foreach($attributesObj as $attributeObj) {
+        // Parsing the Class stdClass Object into an Array in oder to get it's data
+        $attribute = get_object_vars($attributeObj);
+
+        $componentHasAttributesEntity = new componentHasAttributesEntity();
+
+        $componentHasAttributesEntity->setKomponentenId(utf8_encode($componentEntity->getId()));
+        $componentHasAttributesEntity->setWert($attribute['value']);
+
+        // Seraching for attribute Name
+        $attributeEntity = $attributeRepository->findOneBy(array('bezeichnung' => $attribute['label']));
+        if($attributeEntity != null){
+            $attributeId = utf8_encode($attributeEntity->getId());
+            $componentHasAttributesEntity->setAttributId($attributeId);
+        }else {
+            $componentAttributesEntity = new componentAttributesEntity();
+            $componentAttributesEntity->setBezeichnung($attribute['label']);
+            $entityManager->persist($componentAttributesEntity);
+            $entityManager->flush();
+            $componentHasAttributesEntity->setAttributId(utf8_encode($componentAttributesEntity->getId()));
+        }
+
+        $entityManager->persist($componentHasAttributesEntity);
+    }
+    $entityManager->flush();
+
 
     return $response->withStatus(201, "Data created successfully");
 });
