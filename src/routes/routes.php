@@ -376,36 +376,48 @@ $app->post('/components', function(Request $request, Response $response) {
     $componentEntity->setKomponentenartId(utf8_decode($component['componentTypeId']));
     $componentEntity->setRaumId(utf8_decode($component['roomId']));
 
+    // Save all changes done now, in order to get the id of this dataset
     $entityManager->persist($componentEntity);
     $entityManager->flush();
 
-
-
+    // Get the attributes send by user, and decode them
     $attributesObj = json_decode($component['attributes']);
+    // For every attribute object send by the user
     foreach($attributesObj as $attributeObj) {
         // Parsing the Class stdClass Object into an Array in oder to get it's data
         $attribute = get_object_vars($attributeObj);
 
         $componentHasAttributesEntity = new componentHasAttributesEntity();
 
+        // Set the component's id and value, 'cause they're already known
         $componentHasAttributesEntity->setKomponentenId(utf8_encode($componentEntity->getId()));
         $componentHasAttributesEntity->setWert($attribute['value']);
 
         // Seraching for attribute Name
         $attributeEntity = $attributeRepository->findOneBy(array('bezeichnung' => $attribute['label']));
+        // If found
         if($attributeEntity != null){
+            // get attributes id, according to the searched name
             $attributeId = utf8_encode($attributeEntity->getId());
+            // and save it into componentHasAttributeEntity
             $componentHasAttributesEntity->setAttributId($attributeId);
+        // Otherwise
         }else {
+            // Create a new component Attribute
             $componentAttributesEntity = new componentAttributesEntity();
+            // set its name to the attributes name provided
             $componentAttributesEntity->setBezeichnung($attribute['label']);
+            // and save it in order to get the attributes id
             $entityManager->persist($componentAttributesEntity);
             $entityManager->flush();
+            // finally save the newly created attribute's id to the componentHasAttributesEntity
             $componentHasAttributesEntity->setAttributId(utf8_encode($componentAttributesEntity->getId()));
         }
 
+        // if there are any changes not saved, they'll be saved right now
         $entityManager->persist($componentHasAttributesEntity);
     }
+    // for speed reasons, this is outside the loop, to save all persisted data at once (except the one's we need the id's from)
     $entityManager->flush();
 
 
