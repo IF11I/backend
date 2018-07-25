@@ -759,7 +759,7 @@ $app->get('/attributes', function(Request $request, Response $response) {
     foreach($attributes as $attribute) {
         $result[] = [
             'id' => utf8_encode($attribute->getId()),
-            'name' => utf8_encode($attribute->getBezeichnung()),
+            'label' => utf8_encode($attribute->getBezeichnung()),
         ];
     }
     return $response->withJson($result);
@@ -771,7 +771,7 @@ $app->get('/attributes', function(Request $request, Response $response) {
  * @param int id
  * @return HTTP response
  */
-$app->get('/componentTypes/{id}', function (Request $request, Response $response, array $args) {
+$app->get('/attributes/{id}', function (Request $request, Response $response, array $args) {
 
     require '../bootstrap.php';
 
@@ -781,7 +781,7 @@ $app->get('/componentTypes/{id}', function (Request $request, Response $response
     if($attribute != null) {
         $result = [
             'id' => utf8_encode($attribute->getId()),
-            'name' => utf8_encode($attribute->getBezeichnung()),
+            'label' => utf8_encode($attribute->getBezeichnung()),
         ];
         return $response->withJson($result);
     }else {
@@ -820,8 +820,8 @@ $app->put('/attributes/{id}', function(Request $request, Response $response, arr
     $attribute = $repository->find($id);
     $attributeData = $request->getParsedBody();
     if($attribute != null) {
-        if(isset($attributeData['value']))
-            $attribute->setBezeichnung(utf8_decode($attributeData['value']));
+        if(isset($attributeData['label']))
+            $attribute->setBezeichnung(utf8_decode($attributeData['label']));
 
         $entityManager->persist($attribute);
         $entityManager->flush();
@@ -835,7 +835,7 @@ $app->put('/attributes/{id}', function(Request $request, Response $response, arr
  * delets a attribute
  * @return HTTP response
  */
-$app->delete('/attribute/{id}', function(Request $request, Response $response, array $args) {
+$app->delete('/attributes/{id}', function(Request $request, Response $response, array $args) {
 
     require '../bootstrap.php';
 
