@@ -288,26 +288,30 @@ $app->get('/components', function(Request $request, Response $response) {
 
     foreach($components as $component) {
         $attributesObj = $attributeRepository->findBy(array('komponentenId' => utf8_encode($component->getId())));
-        $attributes = [];
-        foreach($attributesObj as $attributeObj) {
-            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
-            $attributes[] = [
-                'id' => utf8_encode($attributeObj->getAttributId()),
-                'label' => utf8_encode($attributesNameObj->getBezeichnung()),
-                'value' => utf8_encode($attributeObj->getWert()),
+        if($attributesObj != null){
+            $attributes = [];
+            foreach($attributesObj as $attributeObj) {
+                $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
+                if($attributesNameObj != null){
+                    $attributes[] = [
+                        'id' => utf8_encode($attributeObj->getAttributId()),
+                        'label' => utf8_encode($attributesNameObj->getBezeichnung()),
+                        'value' => utf8_encode($attributeObj->getWert()),
+                    ];
+                }
+            }
+            $result[] = [
+                'id' => utf8_encode($component->getId()),
+                'roomId' => utf8_encode($component->getRaumId()),
+                'supplierId' => utf8_encode($component->getLieferantenId()),
+                'datePurchased' => $component->getEinkaufsdatum(),
+                'dateWarrantyEnd' => $component->getGewaehrleistungsende(),
+                'notes' => utf8_encode($component->getNotiz()),
+                'manufacturer' => utf8_encode($component->getHersteller()),
+                'componentTypeId' => utf8_encode($component->getKomponentenartId()),
+                'attributes' => $attributes,
             ];
         }
-        $result[] = [
-            'id' => utf8_encode($component->getId()),
-            'roomId' => utf8_encode($component->getRaumId()),
-            'supplierId' => utf8_encode($component->getLieferantenId()),
-            'datePurchased' => $component->getEinkaufsdatum(),
-            'dateWarrantyEnd' => $component->getGewaehrleistungsende(),
-            'notes' => utf8_encode($component->getNotiz()),
-            'manufacturer' => utf8_encode($component->getHersteller()),
-            'componentTypeId' => utf8_encode($component->getKomponentenartId()),
-            'attributes' => $attributes,
-        ];
     }
     return $response->withJson($result);
 });
