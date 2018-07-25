@@ -588,7 +588,7 @@ $app->get('/componenttypes/{id}', function(Request $request, Response $response,
                 'label' => utf8_encode($attribute->getBezeichnung()),
             ];
         }
-        $result[] = [
+        $result = [
             'id' => utf8_encode($componenttype->getId()),
             'name' => utf8_encode($componenttype->getBezeichnung()),
             'attributes' => $attributes,
