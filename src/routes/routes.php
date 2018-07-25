@@ -744,6 +744,113 @@ $app->delete('/componenttypes/{id}', function(Request $request, Response $respon
     }
 });
 
+/**
+ * getting all the attributes
+ * @return HTTP response
+ */
+$app->get('/attributes', function(Request $request, Response $response) {
+
+    require '../bootstrap.php';
+
+    $repository = $entityManager->getRepository('Entities\componentAttributesEntity');
+    $attributes = $repository->findAll();
+    $result = [];
+
+    foreach($attributes as $attribute) {
+        $result[] = [
+            'id' => utf8_encode($attribute->getId()),
+            'label' => utf8_encode($attribute->getBezeichnung()),
+        ];
+    }
+    return $response->withJson($result);
+
+});
+
+/**
+ * getting a single attribute by Id
+ * @param int id
+ * @return HTTP response
+ */
+$app->get('/attributes/{id}', function (Request $request, Response $response, array $args) {
+
+    require '../bootstrap.php';
+
+    $repository = $entityManager->getRepository('Entities\componentAttributesEntity');
+    $id = $args['id'];
+    $attribute = $repository->find($id);
+    if($attribute != null) {
+        $result = [
+            'id' => utf8_encode($attribute->getId()),
+            'label' => utf8_encode($attribute->getBezeichnung()),
+        ];
+        return $response->withJson($result);
+    }else {
+        return $response->withStatus(204, "No Data Found");
+    }
+});
+
+/**
+ * adding a attribute
+ * @return HTTP response
+ */
+$app->post('/attributes', function(Request $request, Response $response) {
+
+    require '../bootstrap.php';
+
+    $attributeData = $request->getParsedBody();
+    $attribute = new componentAttributesEntity();
+    $attribute->setBezeichnung(utf8_decode($attributeData['label']));
+
+    $entityManager->persist($attribute);
+    $entityManager->flush();
+
+    return $response->withStatus(201, "Data created successfully");
+});
+
+/**
+ * editing a attribute
+ * @return HTTP response
+ */
+$app->put('/attributes/{id}', function(Request $request, Response $response, array $args) {
+
+    require '../bootstrap.php';
+
+    $repository = $entityManager->getRepository('Entities\componentAttributesEntity');
+    $id = $args['id'];
+    $attribute = $repository->find($id);
+    $attributeData = $request->getParsedBody();
+    if($attribute != null) {
+        if(isset($attributeData['label']))
+            $attribute->setBezeichnung(utf8_decode($attributeData['label']));
+
+        $entityManager->persist($attribute);
+        $entityManager->flush();
+        return $response->withStatus(201, "Data edited successfully");
+    }else {
+        return $response->withStatus(204, "No Data Found");
+    }
+});
+
+/**
+ * delets a attribute
+ * @return HTTP response
+ */
+$app->delete('/attributes/{id}', function(Request $request, Response $response, array $args) {
+
+    require '../bootstrap.php';
+
+    $repository = $entityManager->getRepository('Entities\componentAttributesEntity');
+    $id = $args['id'];
+    $attribute = $repository->find($id);
+    if($attribute != null) {
+        $entityManager->remove($attribute);
+        $entityManager->flush();
+        return $response->withStatus(200, "Attribute removed successfully");
+    } else {
+        return $response->withStatus(204, "No Data Found");
+    }
+});
+
 $app->run();
 
 
