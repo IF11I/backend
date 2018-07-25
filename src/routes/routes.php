@@ -843,6 +843,12 @@ $app->delete('/attributes/{id}', function(Request $request, Response $response, 
     $id = $args['id'];
     $attribute = $repository->find($id);
     if($attribute != null) {
+        $componentHasAttributeRepository = $entityManager->getRepository('Entities\componentHasAttributesEntity');
+        $componentHasAttributes = $componentHasAttributeRepository->findBy(array('attributId' => $args['id']));
+        foreach($componentHasAttributes as $componentHasAttribute) {
+            var_dump($componentHasAttribute);
+            $entityManager->remove($componentHasAttribute);
+        }
         $entityManager->remove($attribute);
         $entityManager->flush();
         return $response->withStatus(200, "Attribute removed successfully");
