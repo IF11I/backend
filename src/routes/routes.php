@@ -306,6 +306,7 @@ $app->get('/components', function(Request $request, Response $response) {
             'notes' => utf8_encode($component->getNotiz()),
             'manufacturer' => utf8_encode($component->getHersteller()),
             'componentTypeId' => utf8_encode($component->getKomponentenartId()),
+            'name' => utf8_encode($component->getBezeichnung()),
             'attributes' => $attributes,
         ];
     }
@@ -348,6 +349,7 @@ $app->get('/components/{id}', function(Request $request, Response $response, arr
             'notes' => utf8_encode($component->getNotiz()),
             'manufacturer' => utf8_encode($component->getHersteller()),
             'componentTypeId' => utf8_encode($component->getKomponentenartId()),
+            'name' => utf8_encode($component->getBezeichnung()),
             'attributes' => $attributes,
         ];
         return $response->withJson($result);
@@ -377,6 +379,7 @@ $app->post('/components', function(Request $request, Response $response) {
     $componentEntity->setHersteller(utf8_decode($component['manufacturer']));
     $componentEntity->setKomponentenartId(utf8_decode($component['componentTypeId']));
     $componentEntity->setRaumId(utf8_decode($component['roomId']));
+    $componentEntity->setBezeichnung(utf8_decode($component['name']));
 
     // Save all changes done now, in order to get the id of this dataset
     $entityManager->persist($componentEntity);
@@ -447,10 +450,11 @@ $app->put('/components/{id}', function(Request $request, Response $response, arr
         if(isset($componentData['notes']))
             $component->setNotiz(utf8_decode($componentData['notes']));
         if(isset($componentData['manufacturer']))
-            $component->setHErsteller(utf8_decode($componentData['manufacturer']));
+            $component->setHersteller(utf8_decode($componentData['manufacturer']));
         if(isset($componentData['componentTypeId']))
             $component->setKomponentenartId(utf8_decode($componentData['componentTypeId']));
-        if(isset($componentData['attributes']))
+        if(isset($componentData['name']))
+            $component->setBezeichnung(utf8_decode($componentData['name']));
 
         // Save all changes done now, in order to get the id of this dataset
         $entityManager->persist($component);

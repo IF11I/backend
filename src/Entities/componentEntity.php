@@ -41,9 +41,13 @@ class componentEntity
      */
     private $hersteller;
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
     private $komponentenartId;
+    /**
+     * @ORM\Column(type="string", length=45);
+     */
+    private $bezeichnung;
 
     /**
      * Returns the component's Id
@@ -167,6 +171,22 @@ class componentEntity
         $this->komponentenartId = $komponentenartId;
     }
 
+    /**
+     * Returns the components name
+     * @return string
+     */
+    public function getBezeichnung(): string
+    {
+        return $this->bezeichnung;
+    }
 
+    /**
+     * Sets the components name
+     * @param string $bezeichnung
+     */
+    public function setBezeichnung(string $bezeichnung): void
+    {
+        $this->bezeichnung = $bezeichnung;
+    }
 
 }
