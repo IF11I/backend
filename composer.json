@@ -7,7 +7,13 @@
     "autoload": {
         "psr-0": {
             "": "src/"
-
         }
-    }
+    },
+    "scripts":
+      {
+          "generateDummy": [
+              "php dummyFiles\\componentAttributesDummy.php",
+              "php dummyFiles\\suppliersDummy.php"
+          ]
+      }
 }
