@@ -676,7 +676,7 @@ $app->put('/componenttypes/{id}', function(Request $request, Response $response,
         $entityManager->persist($componentType);
 
         // Find all set attributes
-        $componentTypeAttributes = $componentTypeAttributesRepository->findBy(array('componentTypeId' => $componentTypeData['id']));
+        $componentTypeAttributes = $componentTypeAttributesRepository->findBy(array('componentTypeId' => $componentType->getId()));
         // For every attribute with the componentType id provided
         foreach($componentTypeAttributes as $componentTypeAttribute) {
             // Delete all attributes connections
