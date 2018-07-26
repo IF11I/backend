@@ -28,10 +28,10 @@ $app->get('/rooms', function (Request $request, Response $response) {
 
     foreach($rooms as $room) {
         $result[] = [
-            'id' => utf8_encode($room->getId()),
-            'name' => utf8_encode($room->getBezeichnung()),
-            'number' => utf8_encode($room->getNr()),
-            'notes' => utf8_encode($room->getNotiz())
+            'id' => ($room->getId()),
+            'name' => ($room->getBezeichnung()),
+            'number' => ($room->getNr()),
+            'notes' => ($room->getNotiz())
         ];
     }
     $response = $response->withJson($result);
@@ -52,10 +52,10 @@ $app->get('/rooms/{id}', function (Request $request, Response $response, array $
     $room = $repository->find($id);
     if($room != null) {
         $result = [
-            'id' => utf8_encode($room->getId()),
-            'name' => utf8_encode($room->getBezeichnung()),
-            'number' => utf8_encode($room->getNr()),
-            'notes' => utf8_encode($room->getNotiz())
+            'id' => ($room->getId()),
+            'name' => ($room->getBezeichnung()),
+            'number' => ($room->getNr()),
+            'notes' => ($room->getNotiz())
         ];
         $response = $response->withJson($result);
         return $response->withStatus(200, "OK");
@@ -75,9 +75,9 @@ $app->post('/rooms', function(Request $request, Response $response) {
 
     $room = $request->getParsedBody();
     $roomEntity = new roomEntity();
-    $roomEntity->setNr(utf8_decode($room['number']));
-    $roomEntity->setBezeichnung(utf8_decode($room['name']));
-    $roomEntity->setNotiz(utf8_decode($room['notes']));
+    $roomEntity->setNr(($room['number']));
+    $roomEntity->setBezeichnung(($room['name']));
+    $roomEntity->setNotiz(($room['notes']));
 
     $entityManager->persist($roomEntity);
     $entityManager->flush();
@@ -100,11 +100,11 @@ $app->put('/rooms/{id}', function(Request $request, Response $response, array $a
     $roomData = $request->getParsedBody();
     if($room != null) {
         if(isset($roomData['number']))
-            $room->setNr(utf8_decode($roomData['number']));
+            $room->setNr(($roomData['number']));
         if(isset($roomData['name']))
-            $room->setBezeichnung(utf8_decode($roomData['name']));
+            $room->setBezeichnung(($roomData['name']));
         if(isset($roomData['notes']))
-            $room->setNotiz(utf8_decode($roomData['notes']));
+            $room->setNotiz(($roomData['notes']));
 
         $entityManager->persist($room);
         $entityManager->flush();
@@ -154,15 +154,15 @@ $app->get('/suppliers', function(Request $request, Response $response) {
 
     foreach($suppliers as $supplier) {
         $result[] = [
-            'id' => utf8_encode($supplier->getId()),
-            'name' => utf8_encode($supplier->getName()),
-            'street' => utf8_encode($supplier->getStrasse()),
-            'postalCode' => utf8_encode($supplier->getPlz()),
-            'city' => utf8_encode($supplier->getOrt()),
-            'telephone' => utf8_encode($supplier->getTelefon()),
-            'mobile' => utf8_encode($supplier->getMobil()),
-            'fax' => utf8_encode($supplier->getFax()),
-            'email' => utf8_encode($supplier->getMail())
+            'id' => ($supplier->getId()),
+            'name' => ($supplier->getName()),
+            'street' => ($supplier->getStrasse()),
+            'postalCode' => ($supplier->getPlz()),
+            'city' => ($supplier->getOrt()),
+            'telephone' => ($supplier->getTelefon()),
+            'mobile' => ($supplier->getMobil()),
+            'fax' => ($supplier->getFax()),
+            'email' => ($supplier->getMail())
         ];
     }
     $response = $response->withJson($result);
@@ -183,15 +183,15 @@ $app->get('/suppliers/{id}', function(Request $request, Response $response, arra
     $supplier = $repository->find($id);
     if($supplier != null) {
         $result = [
-            'id' => utf8_encode($supplier->getId()),
-            'name' => utf8_encode($supplier->getName()),
-            'street' => utf8_encode($supplier->getStrasse()),
-            'postalCode' => utf8_encode($supplier->getPlz()),
-            'city' => utf8_encode($supplier->getOrt()),
-            'telephone' => utf8_encode($supplier->getTelefon()),
-            'mobile' => utf8_encode($supplier->getMobil()),
-            'fax' => utf8_encode($supplier->getFax()),
-            'email' => utf8_encode($supplier->getMail())
+            'id' => ($supplier->getId()),
+            'name' => ($supplier->getName()),
+            'street' => ($supplier->getStrasse()),
+            'postalCode' => ($supplier->getPlz()),
+            'city' => ($supplier->getOrt()),
+            'telephone' => ($supplier->getTelefon()),
+            'mobile' => ($supplier->getMobil()),
+            'fax' => ($supplier->getFax()),
+            'email' => ($supplier->getMail())
         ];
         $response = $response->withJson($result);
         return $response->withStatus(200, "OK");
@@ -211,14 +211,14 @@ $app->post('/suppliers', function(Request $request, Response $response) {
 
     $supplier = $request->getParsedBody();
     $supplierEntity = new supplierEntity();
-    $supplierEntity->setName(utf8_decode($supplier['name']));
-    $supplierEntity->setStrasse(utf8_decode($supplier['street']));
-    $supplierEntity->setPlz(utf8_decode($supplier['postalCode']));
-    $supplierEntity->setOrt(utf8_decode($supplier['city']));
-    $supplierEntity->setTelefon(utf8_decode($supplier['telephone']));
-    $supplierEntity->setMobil(utf8_decode($supplier['mobile']));
-    $supplierEntity->setFax(utf8_decode($supplier['fax']));
-    $supplierEntity->setMail(utf8_decode($supplier['email']));
+    $supplierEntity->setName(($supplier['name']));
+    $supplierEntity->setStrasse(($supplier['street']));
+    $supplierEntity->setPlz(($supplier['postalCode']));
+    $supplierEntity->setOrt(($supplier['city']));
+    $supplierEntity->setTelefon(($supplier['telephone']));
+    $supplierEntity->setMobil(($supplier['mobile']));
+    $supplierEntity->setFax(($supplier['fax']));
+    $supplierEntity->setMail(($supplier['email']));
 
     $entityManager->persist($supplierEntity);
     $entityManager->flush();
@@ -242,21 +242,21 @@ $app->put('/suppliers/{id}', function(Request $request, Response $response, arra
     if($supplier != null) {
 
         if(isset($supplierData['name']))
-            $supplier->setName(utf8_decode($supplierData['name']));
+            $supplier->setName(($supplierData['name']));
         if(isset($supplierData['street']))
-            $supplier->setStrasse(utf8_decode($supplierData['street']));
+            $supplier->setStrasse(($supplierData['street']));
         if(isset($supplierData['postalCode']))
-            $supplier->setPlz(utf8_decode($supplierData['postalCode']));
+            $supplier->setPlz(($supplierData['postalCode']));
         if(isset($supplierData['city']))
-            $supplier->setOrt(utf8_decode($supplierData['city']));
+            $supplier->setOrt(($supplierData['city']));
         if(isset($supplierData['telephone']))
-            $supplier->setTelefon(utf8_decode($supplierData['telephone']));
+            $supplier->setTelefon(($supplierData['telephone']));
         if(isset($supplierData['mobile']))
-            $supplier->setMobil(utf8_decode($supplierData['mobile']));
+            $supplier->setMobil(($supplierData['mobile']));
         if(isset($supplierData['fax']))
-            $supplier->setFax(utf8_decode($supplierData['fax']));
+            $supplier->setFax(($supplierData['fax']));
         if(isset($supplierData['email']))
-            $supplier->setMail(utf8_decode($supplierData['email']));
+            $supplier->setMail(($supplierData['email']));
 
         $entityManager->persist($supplier);
         $entityManager->flush();
@@ -317,14 +317,14 @@ $app->get('/components', function(Request $request, Response $response) {
     $attributNamenRepository = $entityManager->getRepository('Entities\componentAttributesEntity');
 
     foreach($components as $component) {
-        $attributesObj = $attributeRepository->findBy(array('komponentenId' => utf8_encode($component->getId())));
+        $attributesObj = $attributeRepository->findBy(array('komponentenId' => ($component->getId())));
         $attributes = [];
         foreach ($attributesObj as $attributeObj) {
-            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
+            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => ($attributeObj->getAttributId())));
             $attributes[] = [
-                'id' => utf8_encode($attributeObj->getAttributId()),
-                'label' => utf8_encode($attributesNameObj->getBezeichnung()),
-                'value' => utf8_encode($attributeObj->getWert()),
+                'id' => ($attributeObj->getAttributId()),
+                'label' => ($attributesNameObj->getBezeichnung()),
+                'value' => ($attributeObj->getWert()),
             ];
         }
 
@@ -332,15 +332,15 @@ $app->get('/components', function(Request $request, Response $response) {
         $dateWarrantyEnd = get_object_vars($component->getGewaehrleistungsende());
 
         $result[] = [
-            'id' => utf8_encode($component->getId()),
-            'roomId' => utf8_encode($component->getRaumId()),
-            'supplierId' => utf8_encode($component->getLieferantenId()),
+            'id' => ($component->getId()),
+            'roomId' => ($component->getRaumId()),
+            'supplierId' => ($component->getLieferantenId()),
             'datePurchased' => $datePurchased['date'],
             'dateWarrantyEnd' => $dateWarrantyEnd['date'],
-            'notes' => utf8_encode($component->getNotiz()),
-            'manufacturer' => utf8_encode($component->getHersteller()),
-            'componentTypeId' => utf8_encode($component->getKomponentenartId()),
-            'name' => utf8_encode($component->getBezeichnung()),
+            'notes' => ($component->getNotiz()),
+            'manufacturer' => ($component->getHersteller()),
+            'componentTypeId' => ($component->getKomponentenartId()),
+            'name' => ($component->getBezeichnung()),
             'attributes' => $attributes,
         ];
     }
@@ -365,28 +365,28 @@ $app->get('/components/{id}', function(Request $request, Response $response, arr
     $attributNamenRepository = $entityManager->getRepository('Entities\componentAttributesEntity');
 
     if($component != null) {
-        $attributesObj = $attributeRepository->findBy(array('komponentenId' => utf8_encode($component->getId())));
+        $attributesObj = $attributeRepository->findBy(array('komponentenId' => ($component->getId())));
         $attributes = [];
         foreach($attributesObj as $attributeObj) {
-            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
+            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => ($attributeObj->getAttributId())));
             $attributes[] = [
-                'id' => utf8_encode($attributeObj->getAttributId()),
-                'label' => utf8_encode($attributesNameObj->getBezeichnung()),
-                'value' => utf8_encode($attributeObj->getWert()),
+                'id' => ($attributeObj->getAttributId()),
+                'label' => ($attributesNameObj->getBezeichnung()),
+                'value' => ($attributeObj->getWert()),
             ];
         }
         $datePurchased = get_object_vars($component->getEinkaufsdatum());
         $dateWarrantyEnd = get_object_vars($component->getGewaehrleistungsende());
         $result = [
-            'id' => utf8_encode($component->getId()),
-            'roomId' => utf8_encode($component->getRaumId()),
-            'supplierId' => utf8_encode($component->getLieferantenId()),
+            'id' => ($component->getId()),
+            'roomId' => ($component->getRaumId()),
+            'supplierId' => ($component->getLieferantenId()),
             'datePurchased' => $datePurchased['date'],
             'dateWarrantyEnd' => $dateWarrantyEnd['date'],
-            'notes' => utf8_encode($component->getNotiz()),
-            'manufacturer' => utf8_encode($component->getHersteller()),
-            'componentTypeId' => utf8_encode($component->getKomponentenartId()),
-            'name' => utf8_encode($component->getBezeichnung()),
+            'notes' => ($component->getNotiz()),
+            'manufacturer' => ($component->getHersteller()),
+            'componentTypeId' => ($component->getKomponentenartId()),
+            'name' => ($component->getBezeichnung()),
             'attributes' => $attributes,
         ];
         return $response->withJson($result);
@@ -410,15 +410,15 @@ $app->post('/components', function(Request $request, Response $response) {
 
     $attributeRepository = $entityManager->getRepository('Entities\componentAttributesEntity');
 
-    $componentEntity->setRaumId(utf8_decode($component['roomId']));
-    $componentEntity->setLieferantenId(utf8_decode($component['supplierId']));
-    $componentEntity->setEinkaufsdatum(utf8_decode($component['datePurchased']));
-    $componentEntity->setGewaehrleistungsende(utf8_decode($component['dateWarrantyEnd']));
-    $componentEntity->setNotiz(utf8_decode($component['notes']));
-    $componentEntity->setHersteller(utf8_decode($component['manufacturer']));
-    $componentEntity->setKomponentenartId(utf8_decode($component['componentTypeId']));
-    $componentEntity->setRaumId(utf8_decode($component['roomId']));
-    $componentEntity->setBezeichnung(utf8_decode($component['name']));
+    $componentEntity->setRaumId(($component['roomId']));
+    $componentEntity->setLieferantenId(($component['supplierId']));
+    $componentEntity->setEinkaufsdatum(($component['datePurchased']));
+    $componentEntity->setGewaehrleistungsende(($component['dateWarrantyEnd']));
+    $componentEntity->setNotiz(($component['notes']));
+    $componentEntity->setHersteller(($component['manufacturer']));
+    $componentEntity->setKomponentenartId(($component['componentTypeId']));
+    $componentEntity->setRaumId(($component['roomId']));
+    $componentEntity->setBezeichnung(($component['name']));
 
     // Save all changes done now, in order to get the id of this dataset
     $entityManager->persist($componentEntity);
@@ -432,7 +432,7 @@ $app->post('/components', function(Request $request, Response $response) {
         $componentHasAttributesEntity = new componentHasAttributesEntity();
 
         // Set the component's id and value, 'cause they're already known
-        $componentHasAttributesEntity->setKomponentenId(utf8_encode($componentEntity->getId()));
+        $componentHasAttributesEntity->setKomponentenId(($componentEntity->getId()));
         $componentHasAttributesEntity->setWert($attribute['value']);
 
         // Seraching for attribute Name
@@ -440,7 +440,7 @@ $app->post('/components', function(Request $request, Response $response) {
         // If found
         if($attributeEntity != null){
             // get attributes id, according to the searched name
-            $attributeId = utf8_encode($attributeEntity->getId());
+            $attributeId = ($attributeEntity->getId());
             // and save it into componentHasAttributeEntity
             $componentHasAttributesEntity->setAttributId($attributeId);
         // Otherwise
@@ -478,21 +478,21 @@ $app->put('/components/{id}', function(Request $request, Response $response, arr
         $componentHasAttributesRepository = $entityManager->getRepository('Entities\componentHasAttributesEntity');
 
         if(isset($componentData['roomId']))
-            $component->setRaumId(utf8_decode($componentData['roomId']));
+            $component->setRaumId(($componentData['roomId']));
         if(isset($componentData['supplierId']))
-            $component->setLieferantenId(utf8_decode($componentData['supplierId']));
+            $component->setLieferantenId(($componentData['supplierId']));
         if(isset($componentData['datePurchased']))
-            $component->setEinkaufsdatum(utf8_decode($componentData['datePurchased']));
+            $component->setEinkaufsdatum(($componentData['datePurchased']));
         if(isset($componentData['dateWarrantyEnd']))
-            $component->setGewaehrleistungsende(utf8_decode($componentData['dateWarrantyEnd']));
+            $component->setGewaehrleistungsende(($componentData['dateWarrantyEnd']));
         if(isset($componentData['notes']))
-            $component->setNotiz(utf8_decode($componentData['notes']));
+            $component->setNotiz(($componentData['notes']));
         if(isset($componentData['manufacturer']))
-            $component->setHersteller(utf8_decode($componentData['manufacturer']));
+            $component->setHersteller(($componentData['manufacturer']));
         if(isset($componentData['componentTypeId']))
-            $component->setKomponentenartId(utf8_decode($componentData['componentTypeId']));
+            $component->setKomponentenartId(($componentData['componentTypeId']));
         if(isset($componentData['name']))
-            $component->setBezeichnung(utf8_decode($componentData['name']));
+            $component->setBezeichnung(($componentData['name']));
 
         // Save all changes done now, in order to get the id of this dataset
         $entityManager->persist($component);
@@ -513,7 +513,7 @@ $app->put('/components/{id}', function(Request $request, Response $response, arr
             $componentHasAttributesEntity = new componentHasAttributesEntity();
 
             // Set the component's id and value, 'cause they're already known
-            $componentHasAttributesEntity->setKomponentenId(utf8_encode($component->getId()));
+            $componentHasAttributesEntity->setKomponentenId(($component->getId()));
             $componentHasAttributesEntity->setWert($attribute['value']);
 
             // Seraching for attribute Name
@@ -521,7 +521,7 @@ $app->put('/components/{id}', function(Request $request, Response $response, arr
             // If found
             if($attributeEntity != null){
                 // get attributes id, according to the searched name
-                $attributeId = utf8_encode($attributeEntity->getId());
+                $attributeId = ($attributeEntity->getId());
                 // and save it into componentHasAttributeEntity
                 $componentHasAttributesEntity->setAttributId($attributeId);
             // Otherwise
@@ -590,13 +590,13 @@ $app->get('/componenttypes', function(Request $request, Response $response) {
         foreach($mappings as $mapping) {
             $attribute = $attributeRepository->findOneBy(array('id' => $mapping->getAttributeId()));
             $attributes[] = [
-                'id' => utf8_encode($attribute->getId()),
-                'label' => utf8_encode($attribute->getBezeichnung()),
+                'id' => ($attribute->getId()),
+                'label' => ($attribute->getBezeichnung()),
             ];
         }
         $result[] = [
-            'id' => utf8_encode($componenttype->getId()),
-            'name' => utf8_encode($componenttype->getBezeichnung()),
+            'id' => ($componenttype->getId()),
+            'name' => ($componenttype->getBezeichnung()),
             'attributes' => $attributes,
         ];
     }
@@ -626,13 +626,13 @@ $app->get('/componenttypes/{id}', function(Request $request, Response $response,
         foreach($mappings as $mapping) {
             $attribute = $attributeRepository->findOneBy(array('id' => $mapping->getAttributeId()));
             $attributes[] = [
-                'id' => utf8_encode($attribute->getId()),
-                'label' => utf8_encode($attribute->getBezeichnung()),
+                'id' => ($attribute->getId()),
+                'label' => ($attribute->getBezeichnung()),
             ];
         }
         $result = [
-            'id' => utf8_encode($componenttype->getId()),
-            'name' => utf8_encode($componenttype->getBezeichnung()),
+            'id' => ($componenttype->getId()),
+            'name' => ($componenttype->getBezeichnung()),
             'attributes' => $attributes,
         ];
         $response = $response->withJson($result);
@@ -656,7 +656,7 @@ $app->post('/componenttypes', function(Request $request, Response $response) {
 
     $attributeRepository = $entityManager->getRepository('Entities\componentAttributesEntity');
 
-    $componentTypeEntity->setBezeichnung(utf8_decode($componenttype['name']));
+    $componentTypeEntity->setBezeichnung(($componenttype['name']));
 
     // Save all changes done now, in order to get the id of this dataset
     $entityManager->persist($componentTypeEntity);
@@ -670,14 +670,14 @@ $app->post('/componenttypes', function(Request $request, Response $response) {
         $componentTypeAttributesEntity = new componentTypeAttributesEntity();
 
         // Set the componentType's id, 'cause it is already known
-        $componentTypeAttributesEntity->setComponentTypeId(utf8_encode($componentTypeEntity->getId()));
+        $componentTypeAttributesEntity->setComponentTypeId(($componentTypeEntity->getId()));
 
         // Seraching for attribute id
         $attributeEntity = $attributeRepository->find($attribute['id']);
         // If found
         if($attributeEntity != null){
             // get attributes id, according to the searched id
-            $attributeId = utf8_encode($attributeEntity->getId());
+            $attributeId = ($attributeEntity->getId());
             // and save it into componentHasAttributeEntity
             $componentTypeAttributesEntity->setAttributeId($attributeId);
         // Otherwise
@@ -714,7 +714,7 @@ $app->put('/componenttypes/{id}', function(Request $request, Response $response,
         $attributeRepository = $entityManager->getRepository('Entities\componentAttributesEntity');
 
         if(isset($componentTypeData['name']))
-            $componentType->setBezeichnung(utf8_decode($componentTypeData['name']));
+            $componentType->setBezeichnung(($componentTypeData['name']));
         $entityManager->persist($componentType);
 
         // Find all set attributes
@@ -742,7 +742,7 @@ $app->put('/componenttypes/{id}', function(Request $request, Response $response,
                 // Setting componentType's id 'cause it'S already known
                 $componentTypeAttributesEntity->setComponentTypeId($componentTypeData['id']);
                 // get attributes id, according to the searched id
-                $attributeId = utf8_encode($attributeEntity->getId());
+                $attributeId = ($attributeEntity->getId());
                 // and save it into componentHasAttributeEntity
                 $componentTypeAttributesEntity->setAttributeId($attributeId);
                 $entityManager->persist($componentTypeAttributesEntity);
@@ -809,8 +809,8 @@ $app->get('/attributes', function(Request $request, Response $response) {
 
     foreach($attributes as $attribute) {
         $result[] = [
-            'id' => utf8_encode($attribute->getId()),
-            'label' => utf8_encode($attribute->getBezeichnung()),
+            'id' => ($attribute->getId()),
+            'label' => ($attribute->getBezeichnung()),
         ];
     }
     $response = $response->withJson($result);
@@ -832,8 +832,8 @@ $app->get('/attributes/{id}', function (Request $request, Response $response, ar
     $attribute = $repository->find($id);
     if($attribute != null) {
         $result = [
-            'id' => utf8_encode($attribute->getId()),
-            'label' => utf8_encode($attribute->getBezeichnung()),
+            'id' => ($attribute->getId()),
+            'label' => ($attribute->getBezeichnung()),
         ];
         $response = $response->withJson($result);
         return $response->withStatus(200, "OK");
@@ -853,7 +853,7 @@ $app->post('/attributes', function(Request $request, Response $response) {
 
     $attributeData = $request->getParsedBody();
     $attribute = new componentAttributesEntity();
-    $attribute->setBezeichnung(utf8_decode($attributeData['label']));
+    $attribute->setBezeichnung(($attributeData['label']));
 
     $entityManager->persist($attribute);
     $entityManager->flush();
@@ -876,7 +876,7 @@ $app->put('/attributes/{id}', function(Request $request, Response $response, arr
     $attributeData = $request->getParsedBody();
     if($attribute != null) {
         if(isset($attributeData['label']))
-            $attribute->setBezeichnung(utf8_decode($attributeData['label']));
+            $attribute->setBezeichnung(($attributeData['label']));
 
         $entityManager->persist($attribute);
         $entityManager->flush();
