@@ -288,30 +288,31 @@ $app->get('/components', function(Request $request, Response $response) {
 
     foreach($components as $component) {
         $attributesObj = $attributeRepository->findBy(array('komponentenId' => utf8_encode($component->getId())));
-        if($attributesObj != null){
-            $attributes = [];
-            foreach($attributesObj as $attributeObj) {
-                $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
-                if($attributesNameObj != null){
-                    $attributes[] = [
-                        'id' => utf8_encode($attributeObj->getAttributId()),
-                        'label' => utf8_encode($attributesNameObj->getBezeichnung()),
-                        'value' => utf8_encode($attributeObj->getWert()),
-                    ];
-                }
-            }
-            $result[] = [
-                'id' => utf8_encode($component->getId()),
-                'roomId' => utf8_encode($component->getRaumId()),
-                'supplierId' => utf8_encode($component->getLieferantenId()),
-                'datePurchased' => $component->getEinkaufsdatum(),
-                'dateWarrantyEnd' => $component->getGewaehrleistungsende(),
-                'notes' => utf8_encode($component->getNotiz()),
-                'manufacturer' => utf8_encode($component->getHersteller()),
-                'componentTypeId' => utf8_encode($component->getKomponentenartId()),
-                'attributes' => $attributes,
+        $attributes = [];
+        foreach ($attributesObj as $attributeObj) {
+            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
+            $attributes[] = [
+                'id' => utf8_encode($attributeObj->getAttributId()),
+                'label' => utf8_encode($attributesNameObj->getBezeichnung()),
+                'value' => utf8_encode($attributeObj->getWert()),
             ];
         }
+
+        $datePurchased = get_object_vars($component->getEinkaufsdatum());
+        $dateWarrantyEnd = get_object_vars($component->getGewaehrleistungsende());
+
+        $result[] = [
+            'id' => utf8_encode($component->getId()),
+            'roomId' => utf8_encode($component->getRaumId()),
+            'supplierId' => utf8_encode($component->getLieferantenId()),
+            'datePurchased' => $datePurchased['date'],
+            'dateWarrantyEnd' => $dateWarrantyEnd['date'],
+            'notes' => utf8_encode($component->getNotiz()),
+            'manufacturer' => utf8_encode($component->getHersteller()),
+            'componentTypeId' => utf8_encode($component->getKomponentenartId()),
+            'name' => utf8_encode($component->getBezeichnung()),
+            'attributes' => $attributes,
+        ];
     }
     return $response->withJson($result);
 });
@@ -356,6 +357,20 @@ $app->get('/components/{id}', function(Request $request, Response $response, arr
                 'attributes' => $attributes,
             ];
         }
+        $datePurchased = get_object_vars($component->getEinkaufsdatum());
+        $dateWarrantyEnd = get_object_vars($component->getGewaehrleistungsende());
+        $result = [
+            'id' => utf8_encode($component->getId()),
+            'roomId' => utf8_encode($component->getRaumId()),
+            'supplierId' => utf8_encode($component->getLieferantenId()),
+            'datePurchased' => $datePurchased['date'],
+            'dateWarrantyEnd' => $dateWarrantyEnd['date'],
+            'notes' => utf8_encode($component->getNotiz()),
+            'manufacturer' => utf8_encode($component->getHersteller()),
+            'componentTypeId' => utf8_encode($component->getKomponentenartId()),
+            'name' => utf8_encode($component->getBezeichnung()),
+            'attributes' => $attributes,
+        ];
         return $response->withJson($result);
     }else {
         return $response->withStatus(204, "No Data Found");
@@ -383,6 +398,7 @@ $app->post('/components', function(Request $request, Response $response) {
     $componentEntity->setHersteller(utf8_decode($component['manufacturer']));
     $componentEntity->setKomponentenartId(utf8_decode($component['componentTypeId']));
     $componentEntity->setRaumId(utf8_decode($component['roomId']));
+    $componentEntity->setBezeichnung(utf8_decode($component['name']));
 
     // Save all changes done now, in order to get the id of this dataset
     $entityManager->persist($componentEntity);
@@ -453,10 +469,11 @@ $app->put('/components/{id}', function(Request $request, Response $response, arr
         if(isset($componentData['notes']))
             $component->setNotiz(utf8_decode($componentData['notes']));
         if(isset($componentData['manufacturer']))
-            $component->setHErsteller(utf8_decode($componentData['manufacturer']));
+            $component->setHersteller(utf8_decode($componentData['manufacturer']));
         if(isset($componentData['componentTypeId']))
             $component->setKomponentenartId(utf8_decode($componentData['componentTypeId']));
-        if(isset($componentData['attributes']))
+        if(isset($componentData['name']))
+            $component->setBezeichnung(utf8_decode($componentData['name']));
 
         // Save all changes done now, in order to get the id of this dataset
         $entityManager->persist($component);
