@@ -14,13 +14,13 @@ $components[] = [
 ];
 foreach($components as $component) {
     $componentsEntity = new \Entities\componentEntity();
-    $componentsEntity->setRaumId($component['roomId']);
-    $componentsEntity->setLieferantenId($component['supplierID']);
-    $componentsEntity->setEinkaufsdatum($component['datePurchased']);
-    $componentsEntity->setGewaehrleistungsende($component['dateWarrantyEnd']);
-    $componentsEntity->setNotiz($component['notes']);
-    $componentsEntity->setHersteller($component['manufacturer']);
-    $componentsEntity->setKomponentenartId($component['componentTypeId']);
+    $componentsEntity->setRaumId(utf8_decode($component['roomId']));
+    $componentsEntity->setLieferantenId(utf8_decode($component['supplierID']));
+    $componentsEntity->setEinkaufsdatum(utf8_decode($component['datePurchased']));
+    $componentsEntity->setGewaehrleistungsende(utf8_decode($component['dateWarrantyEnd']));
+    $componentsEntity->setNotiz(utf8_decode($component['notes']));
+    $componentsEntity->setHersteller(utf8_decode($component['manufacturer']));
+    $componentsEntity->setKomponentenartId(utf8_decode($component['componentTypeId']));
     $entityManager->persist($componentsEntity);
 }
 
