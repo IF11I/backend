@@ -130,7 +130,7 @@ $componentHasAttributes[] = [
 foreach($componentHasAttributes as $componentHasAttribute) {
     $componentsEntity = new \Entities\componentTypeAttributesEntity();
     $componentsEntity->setComponentTypeId(utf8_decode($componentHasAttribute['componentTypeId']));
-    $componentsEntity->setAttributeId(utf8_decode($componentHasAttribute['attributeID']));
+    $componentsEntity->setAttributeId(utf8_decode($componentHasAttribute['attributeId']));
     $entityManager->persist($componentsEntity);
 }
 
