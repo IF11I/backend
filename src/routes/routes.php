@@ -335,13 +335,26 @@ $app->get('/components/{id}', function(Request $request, Response $response, arr
 
     if($component != null) {
         $attributesObj = $attributeRepository->findBy(array('komponentenId' => utf8_encode($component->getId())));
-        $attributes = [];
-        foreach($attributesObj as $attributeObj) {
-            $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
-            $attributes[] = [
-                'id' => utf8_encode($attributeObj->getAttributId()),
-                'label' => utf8_encode($attributesNameObj->getBezeichnung()),
-                'value' => utf8_encode($attributeObj->getWert()),
+        if($attributesObj != null){
+            $attributes = [];
+            foreach($attributesObj as $attributeObj) {
+                $attributesNameObj = $attributNamenRepository->findOneBy(array('id' => utf8_encode($attributeObj->getAttributId())));
+                $attributes[] = [
+                    'id' => utf8_encode($attributeObj->getAttributId()),
+                    'label' => utf8_encode($attributesNameObj->getBezeichnung()),
+                    'value' => utf8_encode($attributeObj->getWert()),
+                ];
+            }
+            $result = [
+                'id' => utf8_encode($component->getId()),
+                'roomId' => utf8_encode($component->getRaumId()),
+                'supplierId' => utf8_encode($component->getLieferantenId()),
+                'datePurchased' => $component->getEinkaufsdatum(),
+                'dateWarrantyEnd' => $component->getGewaehrleistungsende(),
+                'notes' => utf8_encode($component->getNotiz()),
+                'manufacturer' => utf8_encode($component->getHersteller()),
+                'componentTypeId' => utf8_encode($component->getKomponentenartId()),
+                'attributes' => $attributes,
             ];
         }
         $datePurchased = get_object_vars($component->getEinkaufsdatum());
@@ -592,7 +605,7 @@ $app->get('/componenttypes/{id}', function(Request $request, Response $response,
                 'label' => utf8_encode($attribute->getBezeichnung()),
             ];
         }
-        $result[] = [
+        $result = [
             'id' => utf8_encode($componenttype->getId()),
             'name' => utf8_encode($componenttype->getBezeichnung()),
             'attributes' => $attributes,
@@ -680,7 +693,7 @@ $app->put('/componenttypes/{id}', function(Request $request, Response $response,
         $entityManager->persist($componentType);
 
         // Find all set attributes
-        $componentTypeAttributes = $componentTypeAttributesRepository->findBy(array('componentTypeId' => $componentTypeData['id']));
+        $componentTypeAttributes = $componentTypeAttributesRepository->findBy(array('componentTypeId' => $componentType->getId()));
         // For every attribute with the componentType id provided
         foreach($componentTypeAttributes as $componentTypeAttribute) {
             // Delete all attributes connections
@@ -853,6 +866,12 @@ $app->delete('/attributes/{id}', function(Request $request, Response $response, 
     $id = $args['id'];
     $attribute = $repository->find($id);
     if($attribute != null) {
+        $componentHasAttributeRepository = $entityManager->getRepository('Entities\componentHasAttributesEntity');
+        $componentHasAttributes = $componentHasAttributeRepository->findBy(array('attributId' => $args['id']));
+        foreach($componentHasAttributes as $componentHasAttribute) {
+            var_dump($componentHasAttribute);
+            $entityManager->remove($componentHasAttribute);
+        }
         $entityManager->remove($attribute);
         $entityManager->flush();
         return $response->withStatus(200, "Attribute removed successfully");
