@@ -1,7 +1,6 @@
 <?php
 namespace routes;
 
-use \DateTime;
 use Entities\componentAttributesEntity;
 use Entities\componentHasAttributesEntity;
 use Entities\supplierEntity;
@@ -35,7 +34,8 @@ $app->get('/rooms', function (Request $request, Response $response) {
             'notes' => utf8_encode($room->getNotiz())
         ];
     }
-    return $response->withJson($result);
+    $response = $response->withJson($result);
+    return $response->withStatus(200, "OK");
 });
 
 /**
@@ -57,8 +57,10 @@ $app->get('/rooms/{id}', function (Request $request, Response $response, array $
             'number' => utf8_encode($room->getNr()),
             'notes' => utf8_encode($room->getNotiz())
         ];
-        return $response->withJson($result);
+        $response = $response->withJson($result);
+        return $response->withStatus(200, "OK");
     }else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -80,6 +82,7 @@ $app->post('/rooms', function(Request $request, Response $response) {
     $entityManager->persist($roomEntity);
     $entityManager->flush();
 
+    $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich erstellt"]);
     return $response->withStatus(201, "Data created successfully");
 });
 
@@ -105,7 +108,11 @@ $app->put('/rooms/{id}', function(Request $request, Response $response, array $a
 
         $entityManager->persist($room);
         $entityManager->flush();
+
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich bearbeitet"]);
+        return $response->withStatus(200, "Change successful");
     }else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -124,8 +131,11 @@ $app->delete('/rooms/{id}', function(Request $request, Response $response, array
     if($room != null) {
         $entityManager->remove($room);
         $entityManager->flush();
-        return $response;
+
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich gelöscht"]);
+        return $response->withStatus(200, "Data deleted successfully");
     } else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -155,7 +165,8 @@ $app->get('/suppliers', function(Request $request, Response $response) {
             'email' => utf8_encode($supplier->getMail())
         ];
     }
-    return $response->withJson($result);
+    $response = $response->withJson($result);
+    return $response->withStatus(200, "OK");
 });
 
 /**
@@ -183,7 +194,9 @@ $app->get('/suppliers/{id}', function(Request $request, Response $response, arra
             'email' => utf8_encode($supplier->getMail())
         ];
         return $response->withJson($result);
+        return $response->withStatus(200, "OK");
     }else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -210,6 +223,7 @@ $app->post('/suppliers', function(Request $request, Response $response) {
     $entityManager->persist($supplierEntity);
     $entityManager->flush();
 
+    $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich erstellt"]);
     return $response->withStatus(201, "Data created successfully");
 });
 
@@ -246,7 +260,11 @@ $app->put('/suppliers/{id}', function(Request $request, Response $response, arra
 
         $entityManager->persist($supplier);
         $entityManager->flush();
+
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich bearbeitet"]);
+        return $response->withStatus(200, "Change successful");
     }else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -265,8 +283,11 @@ $app->delete('/suppliers/{id}', function(Request $request, Response $response, a
     if($supplier != null) {
         $entityManager->remove($supplier);
         $entityManager->flush();
-        return $response;
+
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich gelöscht"]);
+        return $response->withStatus(200, "Data removed successfully");
     } else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -314,7 +335,8 @@ $app->get('/components', function(Request $request, Response $response) {
             'attributes' => $attributes,
         ];
     }
-    return $response->withJson($result);
+    $response = $response->withJson($result);
+    return $response->withStatus(200, "OK");
 });
 
 /**
@@ -359,7 +381,9 @@ $app->get('/components/{id}', function(Request $request, Response $response, arr
             'attributes' => $attributes,
         ];
         return $response->withJson($result);
+        $response->withStatus(200, "OK");
     }else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -423,6 +447,7 @@ $app->post('/components', function(Request $request, Response $response) {
     $entityManager->flush();
 
 
+    $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich erstellt"]);
     return $response->withStatus(201, "Data created successfully");
 });
 
@@ -490,7 +515,7 @@ $app->put('/components/{id}', function(Request $request, Response $response, arr
                 $attributeId = utf8_encode($attributeEntity->getId());
                 // and save it into componentHasAttributeEntity
                 $componentHasAttributesEntity->setAttributId($attributeId);
-                // Otherwise
+            // Otherwise
             }else {
                 $response = $response->withJson(["isSuccessful" => false, "messageText" => "Didn't found specified Attribute, are you sure it's existing"]);
                 return $response->withStatus(409, "Didn't found specified attribute, are you sure it's existing");
@@ -501,6 +526,9 @@ $app->put('/components/{id}', function(Request $request, Response $response, arr
         }
         // for speed reasons, this is outside the loop, to save all persisted data at once (except the one's we need the id's from)
         $entityManager->flush();
+
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich erstellt"]);
+        return $response->withStatus(200, "Data created successfully");
 
 
     }else {
@@ -523,8 +551,11 @@ $app->delete('/components/{id}', function(Request $request, Response $response, 
     if($component != null) {
         $entityManager->remove($component);
         $entityManager->flush();
-        return $response;
+
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich gelöscht"]);
+        return $response->withStatus(200, "Data removed successfully");
     } else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -560,7 +591,8 @@ $app->get('/componenttypes', function(Request $request, Response $response) {
             'attributes' => $attributes,
         ];
     }
-    return $response->withJson($result);
+    $response = $response->withJson($result);
+    return $response->withStatus(200, "OK");
 });
 
 /**
@@ -594,9 +626,10 @@ $app->get('/componenttypes/{id}', function(Request $request, Response $response,
             'name' => utf8_encode($componenttype->getBezeichnung()),
             'attributes' => $attributes,
         ];
-        return $response->withJson($result);
+        $response = $response->withJson($result);
+        return $response->withStatus(200, "OK");
     }else {
-        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "No Data Found"]);
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -650,6 +683,7 @@ $app->post('/componenttypes', function(Request $request, Response $response) {
     // for speed reasons, this is outside the loop, to save all persisted data at once (except the one's we need the id's from)
     $entityManager->flush();
 
+    $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich erstellt"]);
     return $response->withStatus(201, "Data created successfully");
 });
 
@@ -705,12 +739,15 @@ $app->put('/componenttypes/{id}', function(Request $request, Response $response,
                 $entityManager->persist($componentTypeAttributesEntity);
             // Otherwise
             }else {
-                $response = $response->withJson(["isSuccessful" => false, "messageText" => "Didn't found specified Attribute, are you sure it's existing"]);
+                $response = $response->withJson(["isSuccessful" => false, "messageText" => "Konnte Attribut nicht finden, bist du dir sicher dass es existiert?"]);
                 return $response->withStatus(409, "Didn't found specified attribute, are you sure it's existing");
             }
             $entityManager->flush();
+            $response = $response->withJson(["isSuccessful" => true, "messageText" => "Daten erfolgreich erstellt"]);
+            return $response->withStatus(200, "Data changed successfully");
         }
     }else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -734,14 +771,17 @@ $app->delete('/componenttypes/{id}', function(Request $request, Response $respon
         $component = $componentRepository->findOneBy(array('komponentenartId' => $componentType->getId()));
         // If so, throw error
         if($component != null){
-            $response = $response->withJson(['isSuccessful' => false, 'messageText' => "There are some components using this type."]);
+            $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Es gibt noch Komponenten die diesen Typ verwenden"]);
             return $response->withStatus(409, "Cannot delete ComponentType");
         }
         // Otherwise delete the desired componentType
         $entityManager->remove($componentType);
         $entityManager->flush();
-        return $response;
+
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich gelöscht"]);
+        return $response->withStatus(200, "Data removed successfully");
     } else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -764,7 +804,8 @@ $app->get('/attributes', function(Request $request, Response $response) {
             'label' => utf8_encode($attribute->getBezeichnung()),
         ];
     }
-    return $response->withJson($result);
+    $response = $response->withJson($result);
+    return $response->withStatus(200, "OK");
 
 });
 
@@ -785,8 +826,10 @@ $app->get('/attributes/{id}', function (Request $request, Response $response, ar
             'id' => utf8_encode($attribute->getId()),
             'label' => utf8_encode($attribute->getBezeichnung()),
         ];
-        return $response->withJson($result);
+        $response = $response->withJson($result);
+        return $response->withStatus(200, "OK");
     }else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -806,6 +849,7 @@ $app->post('/attributes', function(Request $request, Response $response) {
     $entityManager->persist($attribute);
     $entityManager->flush();
 
+    $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich erstellt"]);
     return $response->withStatus(201, "Data created successfully");
 });
 
@@ -827,8 +871,10 @@ $app->put('/attributes/{id}', function(Request $request, Response $response, arr
 
         $entityManager->persist($attribute);
         $entityManager->flush();
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich erstellt"]);
         return $response->withStatus(201, "Data edited successfully");
     }else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
@@ -853,8 +899,10 @@ $app->delete('/attributes/{id}', function(Request $request, Response $response, 
         }
         $entityManager->remove($attribute);
         $entityManager->flush();
+        $response = $response->withJson(['isSuccessful' => true, 'messageText' => "Daten erfolgreich gelöscht"]);
         return $response->withStatus(200, "Attribute removed successfully");
     } else {
+        $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
     }
 });
