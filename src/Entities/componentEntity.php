@@ -103,7 +103,7 @@ class componentEntity
     /**
      * @param mixed $einkaufsdatum
      */
-    public function setEinkaufsdatum($einkaufsdatum)
+    public function setEinkaufsdatum(string $einkaufsdatum)
     {
         $this->einkaufsdatum = new DateTime($einkaufsdatum);
     }
