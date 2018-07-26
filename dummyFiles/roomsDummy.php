@@ -40,7 +40,7 @@ $rooms[] = [
 ];
 $rooms[] = [
     'name' => "Ausgemustert",
-    'number' => "",
+    'number' => "A",
     'notes' => "Raum für ausgemusterte Komponenten",
 ];
 foreach($rooms as $room) {
