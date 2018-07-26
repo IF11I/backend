@@ -193,7 +193,7 @@ $app->get('/suppliers/{id}', function(Request $request, Response $response, arra
             'fax' => utf8_encode($supplier->getFax()),
             'email' => utf8_encode($supplier->getMail())
         ];
-        return $response->withJson($result);
+        $response = $response->withJson($result);
         return $response->withStatus(200, "OK");
     }else {
         $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
@@ -445,7 +445,7 @@ $app->post('/components', function(Request $request, Response $response) {
             $componentHasAttributesEntity->setAttributId($attributeId);
         // Otherwise
         }else {
-            $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Didn't found specified Attribute, are you sure it's existing"]);
+            $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Konnte Attribut nicht finden, bist du sicher dass es existiert?"]);
             return $response->withStatus(209, "Didn't found specified Attribute, are you sure it's existing");
         }
 
@@ -526,7 +526,7 @@ $app->put('/components/{id}', function(Request $request, Response $response, arr
                 $componentHasAttributesEntity->setAttributId($attributeId);
             // Otherwise
             }else {
-                $response = $response->withJson(["isSuccessful" => false, "messageText" => "Didn't found specified Attribute, are you sure it's existing"]);
+                $response = $response->withJson(["isSuccessful" => false, "messageText" => "Konnte Attribut nicht finden, bist du sicher dass es existiert?"]);
                 return $response->withStatus(409, "Didn't found specified attribute, are you sure it's existing");
             }
 
@@ -682,7 +682,7 @@ $app->post('/componenttypes', function(Request $request, Response $response) {
             $componentTypeAttributesEntity->setAttributeId($attributeId);
         // Otherwise
         }else {
-            $response = $response->withJson(["isSuccessful" => false, "messageText" => "Didn't found specified Attribute, are you sure it's existing"]);
+            $response = $response->withJson(["isSuccessful" => false, "messageText" => "Konnte Attribut nicht finden, bist du sicher dass es existiert?"]);
             return $response->withStatus(409, "Didn't found specified attribute, are you sure it's existing");
         }
 
