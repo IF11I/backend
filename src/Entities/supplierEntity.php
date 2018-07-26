@@ -36,15 +36,15 @@ class supplierEntity
      */
     private $ort;
     /**
-     * @ORM\Column(type="string", name="telefon", length=20)
+     * @ORM\Column(type="string", name="telefon", length=45)
      */
     private $telefon;
     /**
-     * @ORM\Column(type="string", name="mobil", length=20)
+     * @ORM\Column(type="string", name="mobil", length=45)
      */
     private $mobil;
     /**
-     * @ORM\Column(type="string", name="fax", length=20)
+     * @ORM\Column(type="string", name="fax", length=45)
      */
     private $fax;
     /**
