@@ -3,6 +3,7 @@
 namespace Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use \DateTime;
 
 /**
  * @ORM\Entity
@@ -70,7 +71,7 @@ class componentEntity
     /**
      * @param mixed $raumId
      */
-    public function setRaumId($raumId): void
+    public function setRaumId($raumId)
     {
         $this->raumId = $raumId;
     }
@@ -86,7 +87,7 @@ class componentEntity
     /**
      * @param mixed $lieferantenId
      */
-    public function setLieferantenId($lieferantenId): void
+    public function setLieferantenId($lieferantenId)
     {
         $this->lieferantenId = $lieferantenId;
     }
@@ -102,9 +103,9 @@ class componentEntity
     /**
      * @param mixed $einkaufsdatum
      */
-    public function setEinkaufsdatum($einkaufsdatum): void
+    public function setEinkaufsdatum($einkaufsdatum)
     {
-        $this->einkaufsdatum = $einkaufsdatum;
+        $this->einkaufsdatum = new DateTime($einkaufsdatum);
     }
 
     /**
@@ -118,9 +119,9 @@ class componentEntity
     /**
      * @param mixed $gewaehrleistungsende
      */
-    public function setGewaehrleistungsende($gewaehrleistungsende): void
+    public function setGewaehrleistungsende($gewaehrleistungsende)
     {
-        $this->gewaehrleistungsende = $gewaehrleistungsende;
+        $this->gewaehrleistungsende = new DateTime($gewaehrleistungsende);
     }
 
     /**
@@ -134,7 +135,7 @@ class componentEntity
     /**
      * @param mixed $notiz
      */
-    public function setNotiz($notiz): void
+    public function setNotiz($notiz)
     {
         $this->notiz = $notiz;
     }
@@ -150,7 +151,7 @@ class componentEntity
     /**
      * @param mixed $hersteller
      */
-    public function setHersteller($hersteller): void
+    public function setHersteller($hersteller)
     {
         $this->hersteller = $hersteller;
     }
@@ -166,7 +167,7 @@ class componentEntity
     /**
      * @param mixed $komponentenartId
      */
-    public function setKomponentenartId($komponentenartId): void
+    public function setKomponentenartId($komponentenartId)
     {
         $this->komponentenartId = $komponentenartId;
     }
@@ -184,7 +185,7 @@ class componentEntity
      * Sets the components name
      * @param string $bezeichnung
      */
-    public function setBezeichnung(string $bezeichnung): void
+    public function setBezeichnung(string $bezeichnung)
     {
         $this->bezeichnung = $bezeichnung;
     }

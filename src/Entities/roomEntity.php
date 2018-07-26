@@ -53,7 +53,7 @@ class roomEntity
      * Sets the room Number
      * @param string $nr
      */
-    public function setNr(string $nr): void {
+    public function setNr(string $nr) {
         $this->nr = $nr;
     }
 
@@ -70,7 +70,7 @@ class roomEntity
      * Sets the room name
      * @param string $name
      */
-    public function setBezeichnung(string $name): void {
+    public function setBezeichnung(string $name) {
         $this->bezeichnung = $name;
     }
 
@@ -87,7 +87,7 @@ class roomEntity
      * Setts the room Note
      * @param mixed $notiz
      */
-    public function setNotiz($notiz): void
+    public function setNotiz($notiz)
     {
         $this->notiz = $notiz;
     }

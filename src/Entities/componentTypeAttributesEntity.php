@@ -33,7 +33,7 @@ class componentTypeAttributesEntity
      * Sets the componentType id
      * @param int $componentTypeId
      */
-    public function setComponentTypeId(int $componentTypeId): void
+    public function setComponentTypeId(int $componentTypeId)
     {
         $this->componentTypeId = $componentTypeId;
     }
@@ -51,7 +51,7 @@ class componentTypeAttributesEntity
      * Sets the componentTypes attribute id
      * @param integer $attributeId
      */
-    public function setAttributeId(int $attributeId): void
+    public function setAttributeId(int $attributeId)
     {
         $this->attributeId = $attributeId;
     }
