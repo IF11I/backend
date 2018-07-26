@@ -42,7 +42,7 @@ class componentHasAttributesEntity
     /**
      * @param mixed $komponentenId
      */
-    public function setKomponentenId($komponentenId): void
+    public function setKomponentenId($komponentenId)
     {
         $this->komponentenId = $komponentenId;
     }
@@ -58,7 +58,7 @@ class componentHasAttributesEntity
     /**
      * @param mixed $attributId
      */
-    public function setAttributId($attributId): void
+    public function setAttributId($attributId)
     {
         $this->attributId = $attributId;
     }
@@ -74,7 +74,7 @@ class componentHasAttributesEntity
     /**
      * @param mixed $wert
      */
-    public function setWert($wert): void
+    public function setWert($wert)
     {
         $this->wert = $wert;
     }

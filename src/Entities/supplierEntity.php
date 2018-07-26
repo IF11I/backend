@@ -74,7 +74,7 @@ class supplierEntity
      * Sets the supplier's name
      * @param string $name
      */
-    public function setName(string $name): void
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -92,7 +92,7 @@ class supplierEntity
      * Sets the supplier's street
      * @param string $strasse
      */
-    public function setStrasse(string $strasse): void
+    public function setStrasse(string $strasse)
     {
         $this->strasse = $strasse;
     }
@@ -110,7 +110,7 @@ class supplierEntity
      * Sets the supplier's zip-code
      * @param string $plz
      */
-    public function setPlz(string $plz): void
+    public function setPlz(string $plz)
     {
         $this->plz = $plz;
     }
@@ -128,7 +128,7 @@ class supplierEntity
      * Sets the supplier's city
      * @param string $ort
      */
-    public function setOrt(string $ort): void
+    public function setOrt(string $ort)
     {
         $this->ort = $ort;
     }
@@ -146,7 +146,7 @@ class supplierEntity
      * Sets the supplier's phone number
      * @param string $telefon
      */
-    public function setTelefon(string $telefon): void
+    public function setTelefon(string $telefon)
     {
         $this->telefon = $telefon;
     }
@@ -164,7 +164,7 @@ class supplierEntity
      * Sets the supplier*s mobile number
      * @param string $mobil
      */
-    public function setMobil(string $mobil): void
+    public function setMobil(string $mobil)
     {
         $this->mobil = $mobil;
     }
@@ -182,7 +182,7 @@ class supplierEntity
      * Sets the supplier's fax number
      * @param string $fax
      */
-    public function setFax(string $fax): void
+    public function setFax(string $fax)
     {
         $this->fax = $fax;
     }
@@ -200,7 +200,7 @@ class supplierEntity
      * Sets the supplier*s mail address
      * @param string $mail
      */
-    public function setMail(string $mail): void
+    public function setMail(string $mail)
     {
         $this->mail = $mail;
     }

@@ -42,7 +42,7 @@ class componentTypeEntity
      * Sets the name of the componentType Entity
      * @param string $bezeichnung
      */
-    public function setBezeichnung(string $bezeichnung): void
+    public function setBezeichnung(string $bezeichnung)
     {
         $this->bezeichnung = $bezeichnung;
     }
