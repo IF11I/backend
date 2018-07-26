@@ -278,9 +278,18 @@ $app->delete('/suppliers/{id}', function(Request $request, Response $response, a
     require '../bootstrap.php';
 
     $repository = $entityManager->getRepository('Entities\supplierEntity');
+    $componentRepository = $entityManager->getRepository('Entities\componentEntity');
+
     $id = $args['id'];
     $supplier = $repository->find($id);
     if($supplier != null) {
+        // Check if there are any components using this type
+        $component = $componentRepository->findOneBy(array('lieferantenId' => $supplier->getId()));
+        // If so, throw error
+        if($component != null){
+            $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Es gibt noch Komponenten die diesen Typ verwenden"]);
+            return $response->withStatus(409, "Cannot delete supplier");
+        }
         $entityManager->remove($supplier);
         $entityManager->flush();
 
@@ -894,7 +903,6 @@ $app->delete('/attributes/{id}', function(Request $request, Response $response, 
         $componentHasAttributeRepository = $entityManager->getRepository('Entities\componentHasAttributesEntity');
         $componentHasAttributes = $componentHasAttributeRepository->findBy(array('attributId' => $args['id']));
         foreach($componentHasAttributes as $componentHasAttribute) {
-            var_dump($componentHasAttribute);
             $entityManager->remove($componentHasAttribute);
         }
         $entityManager->remove($attribute);
