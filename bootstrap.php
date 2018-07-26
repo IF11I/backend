@@ -8,6 +8,15 @@ require 'vendor/autoload.php';
 $isDevMode = true;
 $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src"), $isDevMode, null, null, false);
 
+// Configuration for productive system
+$conn = array(
+    'driver' => 'pdo_mysql',
+    'host' => 'localhost',
+    'dbname' => 'it-verwaltung',
+    'user' => 'admin',
+    'password' => 'root',
+);
+// Configuration for local test system
 $conn = array(
     'driver' => 'pdo_mysql',
     'host' => 'localhost',
