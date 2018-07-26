@@ -621,11 +621,9 @@ $app->post('/componenttypes', function(Request $request, Response $response) {
     $entityManager->flush();
 
     // Get the attributes send by user, and decode them
-    $attributesObj = json_decode($componenttype['attributes']);
+    $attributesObj = $componenttype['attributes'];
     // For every attribute object send by the user
-    foreach($attributesObj as $attributeObj) {
-        // Parsing the Class stdClass Object into an Array in oder to get it's data
-        $attribute = get_object_vars($attributeObj);
+    foreach($attributesObj as $attribute) {
 
         $componentTypeAttributesEntity = new componentTypeAttributesEntity();
 
@@ -686,12 +684,9 @@ $app->put('/componenttypes/{id}', function(Request $request, Response $response,
         $entityManager->flush();
 
         // Decode provided componentType attributes
-        $attributesObj = json_decode($componentTypeData['attributes']);
+        $attributesObj = $componentTypeData['attributes'];
         // For every attribute provided
-        foreach($attributesObj as $attributeObj) {
-
-            // Parsing the Class stdClass Object into an Array in oder to get it's data
-            $attribute = get_object_vars($attributeObj);
+        foreach($attributesObj as $attribute) {
 
             // Creating new ComponentTypeAttributesEntity
             $componentTypeAttributesEntity = new componentTypeAttributesEntity();
