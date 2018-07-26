@@ -12,13 +12,13 @@
     "scripts":
       {
           "generateDummy": [
-              "php dummyFiles\\componentAttributesDummy.php",
-              "php dummyFiles\\componentHasAttributesDummy.php",
-              "php dummyFiles\\componentsDummy.php",
-              "php dummyFiles\\componentTypeAttributesDummy.php",
-              "php dummyFiles\\componentTypesDummy.php",
-              "php dummyFiles\\roomsDummy.php",
-              "php dummyFiles\\suppliersDummy.php"
+              "php dummyFiles/componentAttributesDummy.php",
+              "php dummyFiles/componentHasAttributesDummy.php",
+              "php dummyFiles/componentsDummy.php",
+              "php dummyFiles/componentTypeAttributesDummy.php",
+              "php dummyFiles/componentTypesDummy.php",
+              "php dummyFiles/roomsDummy.php",
+              "php dummyFiles/suppliersDummy.php"
           ]
       }
 }
