@@ -752,9 +752,9 @@ $app->put('/componenttypes/{id}', function(Request $request, Response $response,
                 return $response->withStatus(409, "Didn't found specified attribute, are you sure it's existing");
             }
             $entityManager->flush();
-            $response = $response->withJson(["isSuccessful" => true, "messageText" => "Daten erfolgreich erstellt"]);
-            return $response->withStatus(200, "Data changed successfully");
         }
+        $response = $response->withJson(["isSuccessful" => true, "messageText" => "Daten erfolgreich erstellt"]);
+        return $response->withStatus(200, "Data changed successfully");
     }else {
         $response = $response->withJson(['isSuccessful' => false, 'messageText' => "Keine Daten gefunden"]);
         return $response->withStatus(204, "No Data Found");
