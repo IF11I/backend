@@ -195,9 +195,9 @@ $componentHasAttributes[] = [
 ];
 foreach($componentHasAttributes as $componentHasAttribute) {
     $componentHasAttributesEntity = new \Entities\componentHasAttributesEntity();
-    $componentHasAttributesEntity->setKomponentenId(utf8_decode($componentHasAttribute['componentID']));
-    $componentHasAttributesEntity->setAttributId(utf8_decode($componentHasAttribute['attributeId']));
-    $componentHasAttributesEntity->setWert(utf8_decode($componentHasAttribute['value']));
+    $componentHasAttributesEntity->setKomponentenId(($componentHasAttribute['componentID']));
+    $componentHasAttributesEntity->setAttributId(($componentHasAttribute['attributeId']));
+    $componentHasAttributesEntity->setWert(($componentHasAttribute['value']));
     $entityManager->persist($componentHasAttributesEntity);
 }
 

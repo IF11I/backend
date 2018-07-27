@@ -45,9 +45,9 @@ $rooms[] = [
 ];
 foreach($rooms as $room) {
     $roomsEntity = new \Entities\roomEntity();
-    $roomsEntity->setNr(utf8_decode($room['number']));
-    $roomsEntity->setBezeichnung(utf8_decode($room['name']));
-    $roomsEntity->setNotiz(utf8_decode($room['notes']));
+    $roomsEntity->setNr(($room['number']));
+    $roomsEntity->setBezeichnung(($room['name']));
+    $roomsEntity->setNotiz(($room['notes']));
     $entityManager->persist($roomsEntity);
 }
 
